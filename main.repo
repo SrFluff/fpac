@@ -5,11 +5,30 @@
 			"bark",
 			"fmg"
 	],
+
+	"libraries":[
+			"libfmake",
+			"libbark",
+			"zipF"
+	],
 	
 	"sources":[
 			"https://raw.githubusercontent.com/SrFluff/fmake/refs/heads/main/fmake",
 			"https://raw.githubusercontent.com/SrFluff/jizz/refs/heads/main/jizz",
 			"https://raw.githubusercontent.com/SrFluff/bark/refs/heads/main/bark",
 			"https://raw.githubusercontent.com/SrFluff/fmagnet/refs/heads/main/fmg"
+	],
+	
+	"LSources":[
+			"https://raw.githubusercontent.com/SrFluff/libfmake/refs/heads/main/libfmake.py",
+			"https://raw.githubusercontent.com/SrFluff/libbark/refs/heads/main/libbark.py",
+			"https://raw.githubusercontent.com/SrFluff/fmagnet/refs/heads/main/zipF.py"
+	],
+
+	"links":[
+			["libfmake"],
+			[],
+			["libbark"],
+			["zipF"]
 	]
 }

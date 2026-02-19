@@ -1,5 +1,5 @@
 #!/bin/python3
-version = "1.0.0"
+version = "1.1.0"
 
 import sys
 import os
@@ -25,11 +25,26 @@ data = json.loads(f.read())
 f.close()
 packages = data["packages"]
 sources = data["sources"]
+libraries = data["libraries"]
+LSources = data["LSources"]
+links = data["links"]
+PYTHONPATH = os.getenv("PYTHONPATH")
 
 if not webchk.check(sources[0]):
     print("[ERROR] The main repo could not be pinged X_X")
     sys.exit()
 
+def rDep(depList=[]):
+    if len(depList) != 0:
+        for i in depList:
+            if i in libraries:
+                if os.path.exists(PYTHONPATH + i + ".py"):
+                    os.remove(PYTHONPATH + i + ".py")
+                    print(f"Library '{i}' was already installed, reinstalling...")
+                os.system("wget -q " + LSources[libraries.index(i)])
+                os.system("mv " + i + ".py " + PYTHONPATH)
+            else:
+                print(f"Library '{i}' is not in the main repository")
 sys.argv.pop(0)
 
 if len(sys.argv) == 0 or "--help" in sys.argv:
@@ -40,6 +55,7 @@ if len(sys.argv) == 0 or "--help" in sys.argv:
     print("remove  - Removes all specified packages")
     print("search  - Searches for a specific package")
     print("check   - Checks if specified packages are installed")
+    print("lib     - Lists all of a package's dependencies")
     print("list    - Lists all available packages")
     print("version - Prints the current version")
 
@@ -54,6 +70,7 @@ if len(sys.argv) > 1:
     if sys.argv[0] == "install":
         for i in sys.argv[1:]:
             if i in packages:
+                rDep(links[packages.index(i)])
                 if not os.path.exists("/usr/bin/" + i):
                     os.system(f"wget -q {sources[packages.index(i)]}")
                     os.system(f"chmod +x {i}")
@@ -91,6 +108,14 @@ if len(sys.argv) > 1:
                     print(f"Package '{i}' is not installed")
             else:
                 print(f"Package '{i}' is not in the main repository")
+    elif sys.argv[0] == "lib":
+        if sys.argv[1] in packages:
+            if len(links[packages.index(sys.argv[1])]) != 0:
+                print("\n".join(links[packages.index(sys.argv[1])]))
+            else:
+                print("Package has no dependencies!")
+        else:
+            print(f"Package '{sys.argv[1]}' is not in the main repository")
     
     elif sys.argv[0] == "search":
         for i in packages:

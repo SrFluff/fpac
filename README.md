@@ -9,8 +9,12 @@ sudo cp /path/to/main.repo /etc/fpac/
 Once fpac is set up you can run `fpac --help` for a list of commands.
 
 ## Configuring `main.repo`
-Since it's just a JSON file you can add your package names to `packages` and the link to the file to `sources`\
-*NOTE: fpac installs all packages to /usr/bin/ as to not mess with /bin*
+
+`packages`: List of packages available to download\
+`sources`: The link to the package file *NOTE: fpac uses WGET under the hood, so name the file the same as the package name*\
+`libraries`: Added in 1.1.0, it's a list of available libraries. *NOTE: The user is not allowed to install these manually*\
+`LSources`: The link to the library file. *NOTE: fpac will check for a file names {library}.py, not {library}*\
+`links`: A list containing lists of libraries to install along with packages. *NOTE: The sub-lists must numerically match the packages*
 
 ## Updating
 To update a package, just run `fpac install package`
