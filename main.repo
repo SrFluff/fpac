@@ -1,0 +1,15 @@
+{
+	"packages":[
+			"fmake",
+			"jizz",
+			"bark",
+			"fmg"
+	],
+	
+	"sources":[
+			"https://raw.githubusercontent.com/SrFluff/fmake/refs/heads/main/fmake",
+			"https://raw.githubusercontent.com/SrFluff/jizz/refs/heads/main/jizz",
+			"https://raw.githubusercontent.com/SrFluff/bark/refs/heads/main/bark",
+			"https://raw.githubusercontent.com/SrFluff/fmagnet/refs/heads/main/fmg"
+	]
+}

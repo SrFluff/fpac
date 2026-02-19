@@ -1,0 +1,98 @@
+#!/bin/python3
+version = "1.0.0"
+
+import sys
+import os
+import json
+try:
+    import webchk
+except Exception:
+    print("[ERROR] Webchk not found X_X")
+    sys.exit()
+
+try:
+    from colorama import Fore
+except Exception:
+    print("[ERROR] Colorama not found X_X")
+    sys.exit()
+
+if not os.path.exists("/etc/fpac/main.repo"):
+    print("[ERROR] No main repo X_X")
+    sys.exit()
+
+f = open("/etc/fpac/main.repo","r")
+data = json.loads(f.read())
+f.close()
+packages = data["packages"]
+sources = data["sources"]
+
+if not webchk.check(sources[0]):
+    print("[ERROR] The main repo could not be pinged X_X")
+    sys.exit()
+
+sys.argv.pop(0)
+
+if len(sys.argv) == 0 or "--help" in sys.argv:
+    print("Usage: fpac [keyword] [packages]")
+    print()
+    print("keywords:")
+    print("install - Installs all specified packages")
+    print("remove  - Removes all specified packages")
+    print("search  - Searches for a specific package")
+    print("check   - Checks if specified packages are installed")
+    print("list    - Lists all available packages")
+    print("version - Prints the current version")
+
+if len(sys.argv) == 1:
+    if sys.argv[0] == "list":
+        for i in packages:
+            print(i)
+    elif sys.argv[0] == "version":
+        print(version)
+
+if len(sys.argv) > 1:
+    if sys.argv[0] == "install":
+        for i in sys.argv[1:]:
+            if i in packages:
+                if not os.path.exists("/usr/bin/" + i):
+                    os.system(f"wget -q {sources[packages.index(i)]}")
+                    os.system(f"chmod +x {i}")
+                    os.system(f"sudo mv {i} /usr/bin/")
+                    print(f"Package '{i}' was installed!")
+                else:
+                    print(f"Package '{i}' is already installed, reinstalling...")
+                    os.system(f"sudo rm /usr/bin/{i}")
+                    os.system(f"wget -q {sources[packages.index(i)]}")
+                    os.system(f"chmod +x {i}")
+                    os.system(f"sudo mv {i} /usr/bin/")
+            else:
+                print(f"Package '{i}' is not in the main repository")
+    
+    elif sys.argv[0] == "remove":
+        for i in sys.argv[1:]:
+            if i in packages:
+                if os.path.exists("/usr/bin/" + i):
+                    os.system(f"sudo rm /usr/bin/{i}")
+                    if os.path.exists("/usr/bin/" + i):
+                        print(f"Package '{i}' was not removed successfully")
+                    else:
+                        print(f"Package '{i}' was removed successfully")
+                else:
+                    print(f"Package '{i}' is not installed")
+            else:
+                print(f"Package '{i}' is not in the main repository")
+    
+    elif sys.argv[0] == "check":
+        for i in sys.argv[1:]:
+            if i in packages:
+                if os.path.exists("/usr/bin/" + i):
+                    print(f"Package '{i}' is installed")
+                else:
+                    print(f"Package '{i}' is not installed")
+            else:
+                print(f"Package '{i}' is not in the main repository")
+    
+    elif sys.argv[0] == "search":
+        for i in packages:
+            if sys.argv[1] in i:
+                print(i.replace(sys.argv[1],Fore.RED + sys.argv[1] + Fore.RESET))
