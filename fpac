@@ -1,5 +1,5 @@
 #!/bin/python3
-version = "1.1.0"
+version = "1.1.1"
 
 import sys
 import os
@@ -30,6 +30,10 @@ LSources = data["LSources"]
 links = data["links"]
 PYTHONPATH = os.getenv("PYTHONPATH")
 
+if PYTHONPATH == "":
+    print("[ERROR] Your PYTHONPATH is empty X_X")
+    sys.exit()
+
 if not webchk.check(sources[0]):
     print("[ERROR] The main repo could not be pinged X_X")
     sys.exit()
@@ -43,6 +47,10 @@ def rDep(depList=[]):
                     print(f"Library '{i}' was already installed, reinstalling...")
                 os.system("wget -q " + LSources[libraries.index(i)])
                 os.system("mv " + i + ".py " + PYTHONPATH)
+                if os.path.exists(PYTHONPATH + i + ".py"):
+                    print(f"Library '{i}' was installed successfully!")
+                else:
+                    print(f"Library '{i}' failed to installed")
             else:
                 print(f"Library '{i}' is not in the main repository")
 sys.argv.pop(0)
