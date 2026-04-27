@@ -1,5 +1,5 @@
-#!/bin/python3
-version = "1.1.1"
+#!/usr/bin/env python3
+version = "1.1.2"
 
 import sys
 import os
@@ -79,26 +79,26 @@ if len(sys.argv) > 1:
         for i in sys.argv[1:]:
             if i in packages:
                 rDep(links[packages.index(i)])
-                if not os.path.exists("/usr/bin/" + i):
+                if not os.path.exists("/usr/local/bin/" + i):
                     os.system(f"wget -q {sources[packages.index(i)]}")
                     os.system(f"chmod +x {i}")
-                    os.system(f"sudo mv {i} /usr/bin/")
+                    os.system(f"sudo mv {i} /usr/local/bin/")
                     print(f"Package '{i}' was installed!")
                 else:
                     print(f"Package '{i}' is already installed, reinstalling...")
-                    os.system(f"sudo rm /usr/bin/{i}")
+                    os.system(f"sudo rm /usr/local/bin/{i}")
                     os.system(f"wget -q {sources[packages.index(i)]}")
                     os.system(f"chmod +x {i}")
-                    os.system(f"sudo mv {i} /usr/bin/")
+                    os.system(f"sudo mv {i} /usr/local/bin/")
             else:
                 print(f"Package '{i}' is not in the main repository")
     
     elif sys.argv[0] == "remove":
         for i in sys.argv[1:]:
             if i in packages:
-                if os.path.exists("/usr/bin/" + i):
-                    os.system(f"sudo rm /usr/bin/{i}")
-                    if os.path.exists("/usr/bin/" + i):
+                if os.path.exists("/usr/local/bin/" + i):
+                    os.system(f"sudo rm /usr/local/bin/{i}")
+                    if os.path.exists("/usr/local/bin/" + i):
                         print(f"Package '{i}' was not removed successfully")
                     else:
                         print(f"Package '{i}' was removed successfully")
@@ -110,7 +110,7 @@ if len(sys.argv) > 1:
     elif sys.argv[0] == "check":
         for i in sys.argv[1:]:
             if i in packages:
-                if os.path.exists("/usr/bin/" + i):
+                if os.path.exists("/usr/local/bin/" + i):
                     print(f"Package '{i}' is installed")
                 else:
                     print(f"Package '{i}' is not installed")
